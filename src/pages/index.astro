@@ -1,0 +1,165 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import ParallelTimeline from "../components/ParallelTimeline.astro";
+import type { TimelineTrack } from "../components/ParallelTimeline.astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+
+const educationTrack: TimelineTrack = {
+  name: "Education",
+  color: "#3772FF",
+  events: [
+    {
+      type: "block",
+      start: "2027-06-01",
+      duration: { months: 24 },
+      label: "Macquarie University",
+      detail: "Master's of IT in Artificial Intelligence",
+    },
+    {
+      type: "block",
+      start: "2023-09-01",
+      duration: { years: 3 },
+      label: "National University of Mongolia",
+      detail: "Bachelor of Science in Computer Science",
+    },
+  ],
+};
+
+const workTrack: TimelineTrack = {
+  name: "Work",
+  color: "#DF2935",
+  events: [
+    {
+      type: "block",
+      start: "2027-03-01",
+      duration: { months: 17 },
+      label: "Orbit: Dating",
+      detail: "Founding Software Developer",
+    },
+    {
+      type: "block",
+      start: "2025-06-01",
+      duration: { years: 2, months: 1 },
+      label: "Unitel",
+      detail: "Full-Stack Software Engineer",
+    },
+    {
+      type: "block",
+      start: "2022-06-01",
+      duration: { months: 8 },
+      label: "Digital Solutions",
+      detail: "Software Developer",
+    },
+  ],
+};
+
+const freelanceTrack: TimelineTrack = {
+  name: "Freelance",
+  color: "#FDCA40",
+  events: [
+    {
+      type: "dot",
+      start: "2026-01-20",
+      label: "Tokotoko",
+    },
+    {
+      type: "block",
+      start: "2025-12-01",
+      duration: { months: 5 },
+      label: "Plutio",
+      detail: "DevOps & AI Consultant",
+    },
+    {
+      type: "dot",
+      start: "2025-06-15",
+      label: "Primax Launch",
+    },
+  ],
+};
+
+const hobbyTrack: TimelineTrack = {
+  name: "Hobby",
+  color: "#29bf12",
+  events: [],
+};
+
+const blogTrack: TimelineTrack = {
+  name: "Blog",
+  color: "#7f2ccb",
+  events: [],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main class="max-w-7xl mx-auto">
+      <!-- Hero -->
+      <div class="h-[80vh] flex flex-col justify-center items-center">
+        <h1 class="text-5xl font-bold">I'm Koso!</h1>
+        <p class="mt-4">
+          I code for the love of the game and I've been accused of some cool
+          things.
+        </p>
+        <div class="flex gap-6 mt-8">
+          <div
+            class="h-[225px] w-[200px] p-4 rounded-md border border-gray-200 flex flex-col justify-between"
+            style="background-color: #F3F5F7;"
+          >
+            <i class="fa-solid fa-quote-left"></i>
+            <p>Do you even sleep?</p>
+            <p>- Ex-coworker</p>
+          </div>
+          <div
+            class="h-[225px] w-[200px] p-4 rounded-md border border-gray-200 flex flex-col justify-between"
+            style="background-color: #F3F5F7;"
+          >
+            <i class="fa-solid fa-quote-left"></i>
+            <p>Do you have a social life?</p>
+            <p>- My parents</p>
+          </div>
+          <div
+            class="h-[225px] w-[200px] p-4 rounded-md border border-gray-200 flex flex-col justify-between"
+            style="background-color: #F3F5F7;"
+          >
+            <i class="fa-solid fa-quote-left"></i>
+            <p>Be honest, how many hours are in your day?</p>
+            <p>- Childhood friend</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lines -->
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold">
+          What I've been up to over the last 6 or so years
+        </h1>
+        <p>
+          ...and a cool <span class="line-through">Sequence</span> Timeline diagram
+          to go with it.
+        </p>
+      </div>
+      <ParallelTimeline
+        tracks={[
+          educationTrack,
+          workTrack,
+          freelanceTrack,
+          hobbyTrack,
+          blogTrack,
+        ]}
+        startYear={2020}
+        untilPresent={true}
+        pxPerYear={180}
+      />
+    </main>
+    <div class="mt-16">
+      <Footer />
+    </div>
+  </body>
+</html>

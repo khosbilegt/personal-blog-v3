@@ -1,0 +1,715 @@
+---
+/**
+ * ParallelTimeline.astro
+ *
+ * Portfolio-grade parallel timeline.
+ * Y-axis is real calendar time. Year bands divide the scroll area.
+ *
+ * Usage:
+ *   <ParallelTimeline tracks={tracks} startYear={2018} />
+ */
+
+export interface TimelineEvent {
+  type: "dot" | "block";
+  /** "YYYY-MM-DD" */
+  start: string;
+  /**
+   * Duration for block events.
+   * { years?: number; months?: number }
+   * e.g. { years: 1, months: 6 }
+   */
+  duration?: { years?: number; months?: number };
+  label: string;
+  description?: string;
+  link?: string;
+  /** Back-compat: prefer `description` going forward. */
+  detail?: string;
+}
+
+export interface TimelineTrack {
+  name: string;
+  color: string;
+  events: TimelineEvent[];
+}
+
+interface Props {
+  tracks: [
+    TimelineTrack,
+    TimelineTrack,
+    TimelineTrack,
+    TimelineTrack,
+    TimelineTrack,
+  ];
+  /** First year on the axis. Defaults to earliest event year. */
+  startYear?: number;
+  /**
+   * If true, the axis end is capped at "today" (month/day included) unless `endYear` is provided.
+   * Useful for "… → Present" timelines even when some items have long durations.
+   */
+  untilPresent?: boolean;
+  /** Last year on the axis. Defaults to latest event end year (unless `untilPresent` is true). */
+  endYear?: number;
+  /** Vertical pixels allocated per year. Controls density. Default: 180 */
+  pxPerYear?: number;
+}
+
+const {
+  tracks,
+  startYear,
+  untilPresent = false,
+  endYear,
+  pxPerYear = 180,
+} = Astro.props;
+const pxPerYear2x = pxPerYear * 2;
+
+// ── Timezone-safe date helpers ───────────────────────────────────────────────
+// Parse "YYYY-MM-DD" into { year, month (1-12), day } without any timezone shifts.
+function parseParts(s: string): { year: number; month: number; day: number } {
+  const [year, month, day] = s.split("-").map(Number);
+  return { year, month, day };
+}
+
+function pad2(n: number): string {
+  return String(n).padStart(2, "0");
+}
+
+// For block events, the visual span runs "backwards" in time (down the page).
+// This computes the chronologically-earliest end date by subtracting duration.
+function endDate(s: string, dur?: { years?: number; months?: number }): string {
+  if (!dur) return s;
+  let { year, month, day } = parseParts(s);
+  year -= dur.years ?? 0;
+  month -= dur.months ?? 0;
+  while (month <= 0) {
+    month += 12;
+    year -= 1;
+  }
+  while (month > 12) {
+    month -= 12;
+    year += 1;
+  }
+  return `${year}-${pad2(month)}-${pad2(day)}`;
+}
+
+// Convert a YYYY-MM-DD string to a numeric "day index" from a base year.
+// We work in fractional years (floating-point) to avoid timezone issues entirely.
+function toFracYear(s: string): number {
+  const { year, month, day } = parseParts(s);
+  // day-of-year approximation: (month-1)*30.44 + day gives good enough precision
+  return year + ((month - 1) * 30.4375 + day) / 365.25;
+}
+
+function endFracYear(s: string, dur?: { years?: number; months?: number }) {
+  return toFracYear(endDate(s, dur));
+}
+
+// ── Derive year range ────────────────────────────────────────────────────────
+const allFrac: number[] = [];
+tracks.forEach((t) =>
+  t.events.forEach((ev) => {
+    allFrac.push(toFracYear(ev.start));
+    if (ev.duration) allFrac.push(endFracYear(ev.start, ev.duration));
+  }),
+);
+
+const now = new Date();
+const today = `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-${pad2(now.getDate())}`;
+const currentFrac = toFracYear(today);
+const derivedMinFrac = allFrac.length ? Math.min(...allFrac) : currentFrac;
+const derivedMaxFrac = allFrac.length ? Math.max(...allFrac) : currentFrac;
+
+// Bottom of the axis (past): match real data so we don't reserve a full year of empty
+// space when `startYear` is earlier than the first event. Top is `axisEndFrac`.
+const axisStartFrac =
+  startYear !== undefined
+    ? Math.max(startYear, derivedMinFrac)
+    : derivedMinFrac;
+
+// Axis end (fractional year). This is the *top boundary* of the timeline.
+// - If endYear is provided, show the full year: end at Jan 1 of the following year.
+// - If untilPresent, end exactly at today's date (so future months are not shown).
+// - Otherwise, end at the latest event end (fractional).
+const axisEndFrac = endYear
+  ? endYear + 1
+  : untilPresent
+    ? currentFrac
+    : derivedMaxFrac;
+
+const axisSpanYears = Math.max(0.25, axisEndFrac - axisStartFrac);
+
+// Integer year labels / bands between first and last calendar year touched.
+const minYear = Math.floor(axisStartFrac);
+const maxYear = Math.max(minYear, Math.floor(axisEndFrac));
+const years = Array.from(
+  { length: maxYear - minYear + 1 },
+  (_, i) => minYear + i,
+);
+
+// Total scroll height is proportional to the actual (fractional) span.
+const totalPx = axisSpanYears * pxPerYear2x;
+
+// ── Position helpers ─────────────────────────────────────────────────────────
+function fracToPx(frac: number): number {
+  return ((axisEndFrac - frac) / axisSpanYears) * totalPx;
+}
+
+function toPx(s: string): number {
+  return fracToPx(toFracYear(s));
+}
+
+function durToPx(s: string, dur?: { years?: number; months?: number }): number {
+  if (!dur) return 0;
+  const startFrac = toFracYear(s);
+  const endFrac = endFracYear(s, dur);
+  // Blocks extend "backwards" in time (towards smaller dates),
+  // but height should always be positive pixels.
+  return ((startFrac - endFrac) / axisSpanYears) * totalPx;
+}
+
+function yearToPx(y: number): number {
+  return ((axisEndFrac - y) / axisSpanYears) * totalPx;
+}
+
+/** Top edge of the stripe for calendar year `y` (Jan 1 y+1 toward “present”). */
+function bandTopPx(y: number): number {
+  return y === maxYear ? 0 : yearToPx(y + 1);
+}
+/** Bottom edge (toward past): clip to real axis start on the first year. */
+function bandBottomPx(y: number): number {
+  return y === minYear ? totalPx : yearToPx(y);
+}
+function bandHeightPx(y: number): number {
+  return Math.max(0, bandBottomPx(y) - bandTopPx(y));
+}
+
+function fmtDur(dur?: { years?: number; months?: number }): string {
+  if (!dur) return "";
+  const parts: string[] = [];
+  if (dur.years) parts.push(`${dur.years}y`);
+  if (dur.months) parts.push(`${dur.months}mo`);
+  return parts.join(" ");
+}
+
+const uid = `ptl-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<div class="ptl" id={uid} style={`--ptl-total:${totalPx}px`}>
+  <!-- ── Column headers ── -->
+  <div class="ptl-header">
+    <div class="ptl-gutter"></div>
+    {
+      tracks.map((t) => (
+        <div class="ptl-col-head">
+          <span class="ptl-pip" style={`background:${t.color}`} />
+          {t.name}
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- ── Scrollable body ── -->
+  <div class="ptl-scroll">
+    <!-- Year bands (decorative, behind tracks) -->
+    <div class="ptl-year-layer" aria-hidden="true">
+      <div class="ptl-gutter-y">
+        {
+          years
+            .filter((y) => yearToPx(y) >= 0 && totalPx >= yearToPx(y))
+            .map((y) => (
+              <div class="ptl-year-tick" style={`top:${yearToPx(y)}px`}>
+                <span class="ptl-year-num">{y}</span>
+              </div>
+            ))
+        }
+        <div class="ptl-year-tick" style={`top:${totalPx}px`}></div>
+      </div>
+      <div class="ptl-bands">
+        {
+          years.map((y, i) => (
+            <div
+              class={`ptl-band${i % 2 === 1 ? " ptl-band--alt" : ""}`}
+              style={`top:${bandTopPx(y)}px; height:${bandHeightPx(y)}px`}
+            >
+              <div class="ptl-band-rule" />
+            </div>
+          ))
+        }
+        <div
+          class="ptl-band-rule ptl-band-rule--cap"
+          style={`top:${totalPx}px; position:absolute; left:0; right:0`}
+        >
+        </div>
+      </div>
+    </div>
+
+    <!-- Track columns -->
+    <div class="ptl-tracks">
+      <div class="ptl-gutter-spacer"></div>
+      {
+        tracks.map((track, ti) => {
+          const side = ti % 2 === 0 ? "r" : "l";
+          return (
+            <div class="ptl-track">
+              <div class="ptl-thread" style={`background:${track.color}`} />
+
+              {track.events.map((ev) => {
+                const top = toPx(ev.start);
+                const h = durToPx(ev.start, ev.duration);
+                const dur = fmtDur(ev.duration);
+                const end = endDate(ev.start, ev.duration);
+                const desc = ev.description ?? ev.detail ?? "";
+                const hasLink = Boolean(ev.link);
+
+                if (ev.type === "dot") {
+                  return (
+                    <>
+                      {hasLink ? (
+                        <a
+                          class="ptl-dot"
+                          href={ev.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={`top:${top}px; background:${track.color}; --c:${track.color}`}
+                          data-label={ev.label}
+                          data-description={desc}
+                          data-date={ev.start}
+                          data-end={ev.start}
+                          data-link={ev.link}
+                          aria-label={`${ev.label} (opens in new tab)`}
+                        />
+                      ) : (
+                        <button
+                          class="ptl-dot"
+                          style={`top:${top}px; background:${track.color}; --c:${track.color}`}
+                          data-label={ev.label}
+                          data-description={desc}
+                          data-date={ev.start}
+                          data-end={ev.start}
+                          aria-label={ev.label}
+                        />
+                      )}
+                      <span
+                        class={`ptl-lbl ptl-lbl--${side}`}
+                        style={`top:${top}px`}
+                        aria-hidden="true"
+                      >
+                        {ev.label}
+                      </span>
+                    </>
+                  );
+                }
+
+                return (
+                  <>
+                    {hasLink ? (
+                      <a
+                        class="ptl-block"
+                        href={ev.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={`top:${top}px; height:${Math.max(h, 6)}px; background:${track.color}; --c:${track.color}`}
+                        data-label={ev.label}
+                        data-description={desc}
+                        data-date={ev.start}
+                        data-end={end}
+                        data-dur={dur}
+                        data-link={ev.link}
+                        aria-label={`${ev.label}${dur ? `, ${dur}` : ""} (opens in new tab)`}
+                      />
+                    ) : (
+                      <button
+                        class="ptl-block"
+                        style={`top:${top}px; height:${Math.max(h, 6)}px; background:${track.color}; --c:${track.color}`}
+                        data-label={ev.label}
+                        data-description={desc}
+                        data-date={ev.start}
+                        data-end={end}
+                        data-dur={dur}
+                        aria-label={`${ev.label}${dur ? `, ${dur}` : ""}`}
+                      />
+                    )}
+                    <span
+                      class={`ptl-lbl ptl-lbl--${side}`}
+                      style={`top:${top + h / 2}px`}
+                      aria-hidden="true"
+                    >
+                      {ev.label}
+                    </span>
+                  </>
+                );
+              })}
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+
+  <!-- Floating tooltip -->
+  <div class="ptl-tip" id={`${uid}-tip`} role="tooltip"></div>
+</div>
+
+<style>
+  .ptl {
+    --ptl-gutter: 52px;
+    --ptl-mono: "DM Mono", "Fira Mono", ui-monospace, monospace;
+    position: relative;
+    width: 100%;
+    font-family: var(--ptl-mono);
+  }
+
+  .ptl-header {
+    display: flex;
+    padding-bottom: 14px;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 8%, transparent);
+  }
+  .ptl-gutter {
+    width: var(--ptl-gutter);
+    flex-shrink: 0;
+  }
+  .ptl-col-head {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary, #888);
+    font-weight: 500;
+  }
+  .ptl-pip {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    opacity: 0.75;
+    flex-shrink: 0;
+  }
+
+  .ptl-scroll {
+    position: relative;
+    overflow-y: auto;
+    max-height: 70vh;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, currentColor 14%, transparent)
+      transparent;
+  }
+  .ptl-scroll::-webkit-scrollbar {
+    width: 3px;
+  }
+  .ptl-scroll::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, currentColor 14%, transparent);
+    border-radius: 3px;
+  }
+
+  .ptl-year-layer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .ptl-gutter-y {
+    width: var(--ptl-gutter);
+    flex-shrink: 0;
+    position: relative;
+    height: var(--ptl-total);
+  }
+  .ptl-bands {
+    flex: 1;
+    position: relative;
+    height: var(--ptl-total);
+  }
+  .ptl-year-tick {
+    position: absolute;
+    right: 0;
+    transform: translateY(0px);
+    padding-right: 10px;
+  }
+  .ptl-year-num {
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    color: color-mix(in srgb, currentColor 30%, transparent);
+    font-family: var(--ptl-mono);
+    font-weight: 500;
+    line-height: 1;
+  }
+  .ptl-band {
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+  .ptl-band--alt {
+    background: color-mix(in srgb, currentColor 2%, transparent);
+  }
+  .ptl-band-rule {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: color-mix(in srgb, currentColor 7%, transparent);
+  }
+
+  .ptl-tracks {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    height: var(--ptl-total);
+  }
+  .ptl-gutter-spacer {
+    width: var(--ptl-gutter);
+    flex-shrink: 0;
+  }
+  .ptl-track {
+    flex: 1;
+    position: relative;
+  }
+  .ptl-thread {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    transform: translateX(-50%);
+    opacity: 0.18;
+    border-radius: 1px;
+  }
+
+  .ptl-dot {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 2px solid var(--color-background-primary, #fff);
+    padding: 0;
+    z-index: 3;
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 0.18s ease;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--c) 35%, transparent);
+  }
+  .ptl-dot:hover,
+  .ptl-dot:focus-visible {
+    transform: translate(-50%, -50%) scale(1.9);
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--c) 18%, transparent);
+    outline: none;
+  }
+
+  .ptl-block {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 11px;
+    min-height: 6px;
+    border-radius: 3px;
+    padding: 0;
+    border: none;
+    z-index: 3;
+    cursor: pointer;
+    opacity: 0.78;
+    text-decoration: none;
+    transition:
+      opacity 0.15s ease,
+      width 0.15s ease,
+      box-shadow 0.15s ease;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--c) 30%, transparent);
+  }
+  .ptl-block:hover,
+  .ptl-block:focus-visible {
+    opacity: 1;
+    width: 15px;
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--c) 14%, transparent);
+    outline: none;
+  }
+
+  .ptl-lbl {
+    position: absolute;
+    font-size: 10px;
+    letter-spacing: 0.03em;
+    color: var(--color-text-secondary, #888);
+    white-space: nowrap;
+    z-index: 4;
+    pointer-events: none;
+    transform: translateY(-50%);
+    line-height: 1.3;
+    font-family: var(--ptl-mono);
+  }
+  .ptl-lbl--r {
+    left: calc(50% + 11px);
+  }
+  .ptl-lbl--l {
+    right: calc(50% + 11px);
+    text-align: right;
+  }
+
+  .ptl-tip {
+    position: fixed;
+    background: color-mix(
+      in srgb,
+      var(--color-background-primary, #fff) 92%,
+      transparent
+    );
+    border: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 11px;
+    font-family: var(--ptl-mono);
+    color: var(--color-text-primary, #111);
+    pointer-events: none;
+    z-index: 9999;
+    max-width: 260px;
+    display: none;
+    line-height: 1.6;
+    box-shadow:
+      0 16px 46px rgba(0, 0, 0, 0.18),
+      0 2px 8px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(10px);
+    transform: translateY(4px) scale(0.985);
+    opacity: 0;
+    transition:
+      transform 0.12s ease,
+      opacity 0.12s ease;
+  }
+  .ptl-tip[data-open="true"] {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+  .ptl-tip-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .ptl-tip strong {
+    font-weight: 600;
+    display: block;
+    font-size: 12px;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+  }
+  .ptl-tip-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, currentColor 55%, transparent);
+  }
+  .ptl-tip-chip::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 99px;
+    background: var(--c, currentColor);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 20%, transparent);
+  }
+  .ptl-tip-desc {
+    display: block;
+    margin-top: 6px;
+    color: color-mix(in srgb, currentColor 78%, transparent);
+  }
+  .ptl-tip-sub {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.07em;
+    opacity: 0.55;
+    margin-top: 8px;
+  }
+  .ptl-tip-sub .ptl-tip-sub-link {
+    margin-left: 8px;
+    opacity: 0.8;
+  }
+</style>
+
+<script define:vars={{ uid }}>
+  const root = document.getElementById(uid);
+  const tip = document.getElementById(`${uid}-tip`);
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => {
+      switch (c) {
+        case "&":
+          return "&amp;";
+        case "<":
+          return "&lt;";
+        case ">":
+          return "&gt;";
+        case '"':
+          return "&quot;";
+        case "'":
+          return "&#39;";
+        default:
+          return c;
+      }
+    });
+  }
+
+  function shortUrl(url) {
+    try {
+      const u = new URL(url, window.location.href);
+      return u.host.replace(/^www\./, "");
+    } catch {
+      return "";
+    }
+  }
+
+  function render(el, e) {
+    const start = el.dataset.date;
+    const end = el.dataset.end || start;
+    const when = start === end ? start : `${start} → ${end}`;
+    const meta = [when, el.dataset.dur].filter(Boolean).join(" · ");
+
+    const label = escapeHtml(el.dataset.label || "");
+    const desc = escapeHtml(el.dataset.description || "");
+    const link = el.dataset.link || "";
+    const linkHost = link ? escapeHtml(shortUrl(link)) : "";
+
+    tip.style.setProperty("--c", el.style.getPropertyValue("--c") || "");
+    tip.innerHTML =
+      `<div class="ptl-tip-row">` +
+      `<strong>${label}</strong>` +
+      `<span class="ptl-tip-chip">${el.tagName === "A" ? " Link" : " Info"}</span>` +
+      `</div>` +
+      (desc ? `<span class="ptl-tip-desc">${desc}</span>` : "") +
+      (meta
+        ? `<span class="ptl-tip-sub">${escapeHtml(meta)}${
+            linkHost
+              ? `<span class="ptl-tip-sub-link">↗ ${linkHost}</span>`
+              : ""
+          }</span>`
+        : "");
+
+    tip.style.display = "block";
+    tip.dataset.open = "true";
+    move(e);
+  }
+  function move(e) {
+    const tw = tip.offsetWidth,
+      th = tip.offsetHeight;
+    tip.style.left =
+      Math.min(e.clientX + 16, window.innerWidth - tw - 10) + "px";
+    tip.style.top =
+      Math.max(8, Math.min(e.clientY - 10, window.innerHeight - th - 10)) +
+      "px";
+  }
+  function hide() {
+    tip.dataset.open = "false";
+    tip.style.display = "none";
+  }
+
+  root.querySelectorAll(".ptl-dot, .ptl-block").forEach((el) => {
+    el.addEventListener("mouseenter", (e) => render(el, e));
+    el.addEventListener("mousemove", (e) => move(e));
+    el.addEventListener("mouseleave", hide);
+    el.addEventListener("focus", (e) => render(el, e));
+    el.addEventListener("blur", hide);
+  });
+</script>
