@@ -46,7 +46,14 @@ const projects = (await getCollection("projects")).sort(
               <div class="p-6 flex flex-col justify-between gap-2">
                 <div class="flex justify-between items-center">
                   <p>{project.data.type || "PROJECT"}</p>
-                  <p>MAR 2025</p>
+                  <p>
+                    {project.data.pubDate
+                      .toLocaleDateString("en-US", {
+                        month: "short",
+                        year: "numeric",
+                      })
+                      .toUpperCase()}
+                  </p>
                 </div>
                 <h1 class="text-2xl font-medium">{project.data.title}</h1>
                 <p class="font-light">{project.data.description}</p>
