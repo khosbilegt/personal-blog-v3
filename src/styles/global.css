@@ -88,14 +88,17 @@ a {
   margin: 1rem 0;
   padding-left: 1.25rem;
   list-style: disc;
+  color: var(--color-description);
 }
 .md-content ol {
   margin: 1rem 0;
   padding-left: 1.25rem;
   list-style: decimal;
+  color: var(--color-description);
 }
 .md-content li {
   margin: 0.25rem 0;
+  color: var(--color-description);
 }
 .md-content blockquote {
   margin: 1.25rem 0;
