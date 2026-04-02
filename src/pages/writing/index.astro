@@ -19,38 +19,23 @@ const posts = (await getCollection("writing")).sort(
   </head>
   <body>
     <Header />
-    <main class="w-full mt-32 px-16 lg:px-4 md:max-w-6xl md:mx-auto">
+    <main
+      class="w-full mt-32 px-16 lg:px-4 md:max-w-6xl md:mx-auto min-h-[70vh]"
+    >
       <h3 class="text-lg">WRITING</h3>
       <h1 class="text-4xl font-bold">Blog posts</h1>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+      <div class="flex flex-col gap-4 mt-8">
         {
-          posts.map((post, idx) => (
-            <div
-              class:list={[
-                "bg-gray-900 hover:scale-103 transition-all duration-200 rounded-2xl overflow-hidden flex flex-col",
-              ]}
-              onclick={`window.location.href = '/writing/${post.id}'`}
-            >
-              <div class="h-[250px] w-full bg-gray-800 flex justify-center items-center overflow-hidden">
-                {post.data.heroImage && (
-                  <Image
-                    width={1000}
-                    height={250}
-                    src={post.data.heroImage}
-                    alt={post.data.title}
-                    class="object-cover"
-                  />
-                )}
-              </div>
-              <div class="p-6 flex flex-col justify-between gap-2">
-                <div class="flex justify-between items-center">
-                  <p>{post.data.type || "PROJECT"}</p>
-                  <p>MAR 2025</p>
-                </div>
-                <h1 class="text-2xl font-medium">{post.data.title}</h1>
-                <p class="font-light">{post.data.description}</p>
-              </div>
-            </div>
+          posts.map((post) => (
+            <a href={`/writing/${post.id}`}>
+              <h1 class="text-lg font-medium hover:underline">
+                {post.data.pubDate.toLocaleDateString("en-US", {
+                  month: "short",
+                  year: "numeric",
+                })}{" "}
+                • {post.data.title}
+              </h1>
+            </a>
           ))
         }
       </div>

@@ -13,7 +13,7 @@ const projects = (await getCollection("projects"))
 
 const writing = (await getCollection("writing"))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 3);
+  .slice(0, 12);
 
 const reading = (await getCollection("reading"))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
@@ -123,36 +123,18 @@ const workExperience = new Date().getFullYear() - workStartDate.getFullYear();
             >View All</a
           >
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+        <div class="flex flex-col gap-4 mt-8">
           {
-            writing.map((writing, idx) => (
-              <div
-                class:list={[
-                  "bg-gray-900 hover:scale-103 transition-all duration-200 rounded-2xl overflow-hidden flex flex-col",
-                  idx === 2 && "md:hidden lg:flex",
-                ]}
-                onclick={`window.location.href = '/writing/${writing.id}'`}
-              >
-                <div class="h-[250px] w-full bg-gray-800 flex justify-center items-center">
-                  {writing.data.heroImage && (
-                    <Image
-                      width={1000}
-                      height={250}
-                      src={writing.data.heroImage}
-                      alt={writing.data.title}
-                      class="object-cover"
-                    />
-                  )}
-                </div>
-                <div class="p-6 flex flex-col justify-between gap-2">
-                  <div class="flex justify-between items-center">
-                    <p>{writing.data.type || "PROJECT"}</p>
-                    <p>MAR 2025</p>
-                  </div>
-                  <h1 class="text-2xl font-medium">{writing.data.title}</h1>
-                  <p class="font-light">{writing.data.description}</p>
-                </div>
-              </div>
+            writing.map((writing) => (
+              <a href={`/writing/${writing.id}`}>
+                <h1 class="text-lg font-medium hover:underline">
+                  {writing.data.pubDate.toLocaleDateString("en-US", {
+                    month: "short",
+                    year: "numeric",
+                  })}{" "}
+                  • {writing.data.title}
+                </h1>
+              </a>
             ))
           }
         </div>

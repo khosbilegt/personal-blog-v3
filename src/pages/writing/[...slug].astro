@@ -1,20 +1,55 @@
 ---
 import { type CollectionEntry, getCollection, render } from "astro:content";
-import BlogPost from "../../layouts/BlogPost.astro";
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("writing");
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: post,
+  const writing = await getCollection("writing");
+  return writing.map((writing) => ({
+    params: { slug: writing.id },
+    props: writing,
   }));
 }
 type Props = CollectionEntry<"writing">;
 
-const post = Astro.props;
-const { Content } = await render(post);
+const writing = Astro.props;
+const { Content } = await render(writing);
 ---
 
-<BlogPost {...post.data}>
-  <Content />
-</BlogPost>
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <article
+        class="w-full mt-16 px-16 lg:px-4 md:max-w-6xl md:mx-auto min-h-[70vh]"
+      >
+        <h3 class="text-lg">{writing.data.type || "PROJECT"}</h3>
+        <h1 class="mt-4 text-4xl font-semibold">{writing.data.title}</h1>
+        <div class="mt-4 flex gap-2 text-sm">
+          <p>By Koso Bilegsaikhan</p>
+          <p>•</p>
+          <p>
+            Published {
+              writing.data.pubDate.toLocaleDateString("en-US", {
+                month: "short",
+                year: "numeric",
+              })
+            }
+          </p>
+        </div>
+
+        <div class="md-content">
+          <Content />
+        </div>
+      </article>
+      <div class="mt-16"></div>
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -10,7 +10,6 @@ const writing = defineCollection({
     z.object({
       title: z.string(),
       type: z.optional(z.string()),
-      description: z.string(),
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
       heroImage: z.optional(image()),
