@@ -11,7 +11,16 @@ const projects = (await getCollection("projects"))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
 
-console.log(projects);
+const writing = (await getCollection("writing"))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const reading = (await getCollection("reading"))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const workStartDate = new Date("2020-03-01");
+const workExperience = new Date().getFullYear() - workStartDate.getFullYear();
 ---
 
 <!doctype html>
@@ -29,9 +38,10 @@ console.log(projects);
             <h1 class="text-4xl font-bold">Koso Bilegsaikhan</h1>
             <div class="flex flex-col gap-4 mt-4">
               <p>
-                I'm a Full-Stack Engineer with over 5 years of professional
-                experience based in Sydney, NSW. My red flag is reading a
-                sci-fi, cautionary tale and saying: I kinda wanna make it.
+                I'm a Full-Stack Engineer with over
+                {workExperience} years of professional experience based in Sydney,
+                NSW. My red flag is reading a sci-fi, cautionary tale and saying:
+                I kinda wanna make it.
               </p>
               <p>
                 I know a little bit of everything, but know a bunch about
@@ -73,26 +83,28 @@ console.log(projects);
                 ]}
                 onclick={`window.location.href = '/projects/${project.id}'`}
               >
-                <div class="h-[250px] w-full bg-gray-800 flex justify-center items-center">
-                  <Image
-                    width={1000}
-                    height={250}
-                    src={
-                      (
-                        {
-                          src: project.data.heroImage,
-                        } as unknown as ImageMetadata
-                      ).src ??
-                      "https://stantyan.com/assets/blog/subscription-metrics/subscription-metrics-preview.CdQwwudZ_zWVAP.webp"
-                    }
-                    alt={project.data.title}
-                    class="object-cover"
-                  />
+                <div class="h-[250px] w-full bg-gray-800 flex justify-center items-center overflow-hidden">
+                  {project.data.heroImage && (
+                    <Image
+                      class="object-contain"
+                      width={1000}
+                      height={250}
+                      src={project.data.heroImage}
+                      alt={project.data.title}
+                    />
+                  )}
                 </div>
                 <div class="p-6 flex flex-col justify-between gap-2">
                   <div class="flex justify-between items-center">
                     <p>{project.data.type || "PROJECT"}</p>
-                    <p>MAR 2025</p>
+                    <p>
+                      {project.data.pubDate
+                        .toLocaleDateString("en-US", {
+                          month: "short",
+                          year: "numeric",
+                        })
+                        .toUpperCase()}
+                    </p>
                   </div>
                   <h1 class="text-2xl font-medium">{project.data.title}</h1>
                   <p class="font-light">{project.data.description}</p>
@@ -113,37 +125,32 @@ console.log(projects);
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
           {
-            projects.map((project, idx) => (
+            writing.map((writing, idx) => (
               <div
                 class:list={[
                   "bg-gray-900 hover:scale-103 transition-all duration-200 rounded-2xl overflow-hidden flex flex-col",
                   idx === 2 && "md:hidden lg:flex",
                 ]}
-                onclick={`window.location.href = '/projects/${project.id}'`}
+                onclick={`window.location.href = '/writing/${writing.id}'`}
               >
                 <div class="h-[250px] w-full bg-gray-800 flex justify-center items-center">
-                  <Image
-                    width={1000}
-                    height={250}
-                    src={
-                      (
-                        {
-                          src: project.data.heroImage,
-                        } as unknown as ImageMetadata
-                      ).src ??
-                      "https://stantyan.com/assets/blog/subscription-metrics/subscription-metrics-preview.CdQwwudZ_zWVAP.webp"
-                    }
-                    alt={project.data.title}
-                    class="object-cover"
-                  />
+                  {writing.data.heroImage && (
+                    <Image
+                      width={1000}
+                      height={250}
+                      src={writing.data.heroImage}
+                      alt={writing.data.title}
+                      class="object-cover"
+                    />
+                  )}
                 </div>
                 <div class="p-6 flex flex-col justify-between gap-2">
                   <div class="flex justify-between items-center">
-                    <p>{project.data.type || "PROJECT"}</p>
+                    <p>{writing.data.type || "PROJECT"}</p>
                     <p>MAR 2025</p>
                   </div>
-                  <h1 class="text-2xl font-medium">{project.data.title}</h1>
-                  <p class="font-light">{project.data.description}</p>
+                  <h1 class="text-2xl font-medium">{writing.data.title}</h1>
+                  <p class="font-light">{writing.data.description}</p>
                 </div>
               </div>
             ))
@@ -167,23 +174,18 @@ console.log(projects);
                   "bg-gray-900 hover:scale-103 transition-all duration-200 rounded-2xl overflow-hidden flex flex-col",
                   idx === 2 && "md:hidden lg:flex",
                 ]}
-                onclick={`window.location.href = '/projects/${project.id}'`}
+                onclick={`window.location.href = '/reading/${project.id}'`}
               >
                 <div class="h-[250px] w-full bg-gray-800 flex justify-center items-center">
-                  <Image
-                    width={1000}
-                    height={250}
-                    src={
-                      (
-                        {
-                          src: project.data.heroImage,
-                        } as unknown as ImageMetadata
-                      ).src ??
-                      "https://stantyan.com/assets/blog/subscription-metrics/subscription-metrics-preview.CdQwwudZ_zWVAP.webp"
-                    }
-                    alt={project.data.title}
-                    class="object-cover"
-                  />
+                  {/* {reading.data.heroImage && (
+                    <Image
+                      width={1000}
+                      height={250}
+                      src={reading.data.heroImage}
+                      alt={reading.data.title}
+                      class="object-cover"
+                    />
+                  )} */}
                 </div>
                 <div class="p-6 flex flex-col justify-between gap-2">
                   <div class="flex justify-between items-center">

@@ -32,21 +32,16 @@ const projects = (await getCollection("projects")).sort(
               ]}
               onclick={`window.location.href = '/projects/${project.id}'`}
             >
-              <div class="h-[250px] w-full bg-gray-800 flex justify-center items-center">
-                <Image
-                  width={1000}
-                  height={250}
-                  src={
-                    (
-                      {
-                        src: project.data.heroImage,
-                      } as unknown as ImageMetadata
-                    ).src ??
-                    "https://stantyan.com/assets/blog/subscription-metrics/subscription-metrics-preview.CdQwwudZ_zWVAP.webp"
-                  }
-                  alt={project.data.title}
-                  class="object-cover"
-                />
+              <div class="h-[250px] w-full bg-gray-800 flex justify-center items-center overflow-hidden">
+                {project.data.heroImage && (
+                  <Image
+                    width={1000}
+                    height={250}
+                    src={project.data.heroImage}
+                    alt={project.data.title}
+                    class="object-cover"
+                  />
+                )}
               </div>
               <div class="p-6 flex flex-col justify-between gap-2">
                 <div class="flex justify-between items-center">
