@@ -48,22 +48,6 @@ const { Content } = await render(project);
             }
           </p>
         </div>
-
-        <p class="mt-4 text-gray-500">{project.data.description}</p>
-        <div class="mt-4 overflow-hidden rounded-lg w-full h-[300px]">
-          {
-            project.data.heroImage && (
-              <Image
-                width={1000}
-                height={500}
-                src={project.data.heroImage}
-                alt={project.data.title}
-                class="object-contain"
-              />
-            )
-          }
-        </div>
-        <div class="mt-16"></div>
         <div class="md-content">
           <Content />
         </div>
