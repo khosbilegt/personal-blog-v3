@@ -18,24 +18,33 @@ Nginx has a configurable module that automatically maps the source IP address to
 
 While you must compile Nginx, you don't actually have to install it. Instead, you only need to use it to generate GeoIP's dynamically linked library ngx_http_geoip2_module.so and move it to Nginx's dynamic module directory.
 
+```
 [root@fedora-2gb-sin-1 ~]# nginx -v
 nginx version: nginx/1.26.3
+```
 
 After you find your Nginx version, you must download the source code for that specific version. If a version mismatch happens, your running Nginx instance will not be able to utilize your dynamic linked library.
 
+```
 wget http://nginx.org/download/nginx-VERSION.tar.gz
 tar zxvf nginx-VERSION.tar.gz
 cd nginx-VERSION
+```
 
 To build the modules, you must download any dependencies the compilation requires and execute the following commands.
 
+```
 ./configure --with-compat --add-dynamic-module=/path/to/ngx_http_geoip2_module
 make modules
+```
+
 This will produce objs/ngx_http_geoip2_module.so. It can be copied to your nginx module path manually if you wish.
 
 Add the following line to your nginx.conf:
 
+```
 load_module modules/ngx_http_geoip2_module.so;
+```
 
 ### 2. Nginx Configuration
 
