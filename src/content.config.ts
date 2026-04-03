@@ -35,6 +35,7 @@ const reading = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
+      type: z.optional(z.string()),
       heroImage: z.optional(image()),
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
