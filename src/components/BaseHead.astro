@@ -2,8 +2,9 @@
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
 import "../styles/global.css";
-import type { ImageMetadata } from "astro";
+import { getImage } from "astro:assets";
 import { SITE_TITLE } from "../consts";
+import profileImage from "../assets/profile.png";
 
 interface Props {
   title: string;
@@ -13,14 +14,29 @@ interface Props {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description } = Astro.props;
+const { title, description, image } = Astro.props;
+
+let metaImage = await getImage({
+  src: profileImage,
+  width: 1200,
+  height: 1200,
+});
+if (image) {
+  metaImage = await getImage({
+    src: image,
+    width: 1200,
+    height: 1200,
+  });
+}
+const metaImageBase = Astro.site ?? Astro.url;
+const metaImageUrl = new URL(metaImage.src, metaImageBase).href;
+console.log("metaImageUrl", metaImageUrl);
 ---
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="icon" href="/favicon.ico" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link
   rel="alternate"
@@ -59,12 +75,24 @@ const { title, description } = Astro.props;
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
+<meta property="og:image" content={metaImageUrl} />
+<meta
+  property="og:image:width"
+  content={String(metaImage.attributes.width ?? 1200)}
+/>
+<meta
+  property="og:image:height"
+  content={String(metaImage.attributes.height ?? 1200)}
+/>
+<meta property="og:image:alt" content={title} />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
+<meta name="twitter:image" content={metaImageUrl} />
+<meta name="twitter:image:alt" content={title} />
 
 <script is:inline>
   (() => {
@@ -83,8 +111,3 @@ const { title, description } = Astro.props;
     root.dataset.theme = next;
   })();
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"
-></script>
-<script src="https://kit.fontawesome.com/30ba9beaa4.js" crossorigin="anonymous"
-></script>
