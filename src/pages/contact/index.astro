@@ -62,10 +62,12 @@ const workTypes = [
           but feel free to reach out to me via email and we can arrange
           something.
         </p>
-        <div class="flex justify-center items-center gap-4 mt-8">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 items-stretch"
+        >
           {
             workTypes.map((workType) => (
-              <div class="w-[400px] h-[450px] bg-gray-900 transition-all duration-200 rounded-2xl overflow-hidden flex flex-col p-6 justify-between">
+              <div class="w-full min-h-[450px] bg-gray-900 transition-all duration-200 rounded-2xl overflow-hidden flex flex-col p-6 justify-between">
                 <div>
                   <p class="text-lg font-medium text-center">
                     {workType.title}
@@ -76,7 +78,7 @@ const workTypes = [
                     <p>/{workType.priceUnit}</p>
                   </div>
                 </div>
-                <ul class="mt-8 ml-8 space-y-3 text-white w-[250px]">
+                <ul class="mt-8 mx-auto space-y-3 text-white w-full max-w-[250px]">
                   {workType.features.map((feature) => (
                     <li class="flex items-start gap-3">
                       <svg
@@ -100,7 +102,7 @@ const workTypes = [
                     href={upworkLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-all duration-200 w-[250px] justify-center inline-flex items-center gap-2"
+                    class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-all duration-200 w-full max-w-[250px] justify-center inline-flex items-center gap-2"
                   >
                     <span class="inline-flex size-5 shrink-0 items-center justify-center">
                       <img
@@ -118,7 +120,7 @@ const workTypes = [
                     href={`mailto:${email}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="bg-gray-900 border border-gray-800 hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-all duration-200 w-[250px] justify-center inline-flex items-center gap-2"
+                    class="bg-gray-900 border border-gray-800 hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-all duration-200 w-full max-w-[250px] justify-center inline-flex items-center gap-2"
                   >
                     <span class="inline-flex size-5 shrink-0 items-center justify-center">
                       <svg
@@ -141,24 +143,24 @@ const workTypes = [
               </div>
             ))
           }
-        </div>
-        <div
-          class="w-full h-[250px] bg-gray-900 transition-all duration-200 rounded-2xl overflow-hidden flex flex-col p-6 gap-4"
-        >
-          <h1 class="text-2xl font-medium">Full-time position</h1>
-          <p>
-            I'm currently working at a startup as a Founding Engineer and got a
-            pretty decent gig going; but obviously I'm open to global remote
-            opportunities or local positions in Australia. Open to flying over
-            to Singapore or Europe if I get a cool job.
-          </p>
-          <p>
-            If you think I'm cool and want to offer me a position, please note
-            that I'm currently an <span class="underline"
-              >international student</span
-            > in Sydney, NSW. If you want to throw a sponsorship my way, I'll come
-            running.
-          </p>
+          <div
+            class="w-full min-h-[250px] h-auto bg-gray-900 transition-all duration-200 rounded-2xl overflow-hidden flex flex-col p-6 gap-4 md:min-h-0 lg:col-span-3"
+          >
+            <h2 class="text-2xl font-medium">Full-time position</h2>
+            <p>
+              I'm currently working at a startup as a Founding Engineer and got
+              a pretty decent gig going; but obviously I'm open to global remote
+              opportunities or local positions in Australia. Open to flying over
+              to Singapore or Europe if I get a cool job.
+            </p>
+            <p>
+              If you think I'm cool and want to offer me a position, please note
+              that I'm currently an <span class="underline"
+                >international student</span
+              > in Sydney, NSW. If you want to throw a sponsorship my way, I'll come
+              running.
+            </p>
+          </div>
         </div>
       </div>
       <div class="mt-8">
