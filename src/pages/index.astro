@@ -21,6 +21,24 @@ const reading = (await getCollection("reading"))
 
 const workStartDate = new Date("2020-03-01");
 const workExperience = new Date().getFullYear() - workStartDate.getFullYear();
+
+const achievements = [
+  {
+    title: "RunnerUp in Govhack 2025",
+    pubDate: new Date("2025-12-10"),
+    link: "https://www.linkedin.com/posts/koso-bilegsaikhan_excited-to-share-that-our-team-gridunlocked-activity-7403323655696605184-b2oL?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD3MwKEB5HL9rLW_5PL5lC91RwFgCI9gRJs",
+  },
+  {
+    title: "National News Appearance during DX-Cup 2023",
+    pubDate: new Date("2023-06-01"),
+    link: "https://www.youtube.com/watch?v=vscV4DMRbnI",
+  },
+  {
+    title: "Top 3 Scorer in Mongolia in ITPEC FE 2022",
+    pubDate: new Date("2022-04-10"),
+    link: "https://itpec.org/statsandresults/high-score-passers-202204.html",
+  },
+];
 ---
 
 <!doctype html>
@@ -174,6 +192,28 @@ const workExperience = new Date().getFullYear() - workStartDate.getFullYear();
                   )}
                 </div>
               </div>
+            ))
+          }
+        </div>
+        <div class="mt-16"></div>
+        <h3 class="text-lg">ACHIEVEMENTS</h3>
+        <h1 class="text-4xl font-bold">Digital Footprint</h1>
+        <div class="flex flex-col gap-4 mt-8">
+          {
+            achievements.map((achievement) => (
+              <a
+                href={achievement.link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <h1 class="text-lg font-medium hover:underline">
+                  {achievement.pubDate.toLocaleDateString("en-US", {
+                    month: "short",
+                    year: "numeric",
+                  })}{" "}
+                  • {achievement.title}
+                </h1>
+              </a>
             ))
           }
         </div>
