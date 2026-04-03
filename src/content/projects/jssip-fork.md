@@ -2,7 +2,7 @@
 title: "Securing WebRTC via JWT Tokens"
 type: "WORK"
 heroImage: "../../assets/blog/websocket_diagram.png"
-pubDate: "March 30 2026"
+pubDate: "Mar 30 2025"
 description: "Securing Websockets by using JWT without using the URL query parameters."
 ---
 

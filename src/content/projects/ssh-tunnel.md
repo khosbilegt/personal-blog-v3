@@ -2,7 +2,7 @@
 title: "SSH Tunnel Deep-Dive"
 type: "PERSONAL"
 heroImage: "https://iximiuz.com/ssh-tunnels/ssh-tunnels-2000-opt.png"
-pubDate: "July 11 2025"
+pubDate: "Jul 11 2025"
 description: "Explaining SSH Tunnels and how to use them, specifically for receiving webhooks."
 ---
 
