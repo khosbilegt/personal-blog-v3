@@ -60,17 +60,15 @@ a {
 
 /* Basic markdown styling for rendered Content collections */
 .md-content {
-  margin-top: 2.5rem;
   line-height: 1.75;
 }
 .md-content h2 {
-  margin-top: 2.5rem;
   margin-bottom: 1rem;
   font-size: 1.5rem;
   font-weight: 600;
 }
 .md-content h3 {
-  margin-top: 2rem;
+  margin-top: 1rem;
   margin-bottom: 0.75rem;
   font-size: 1.25rem;
   font-weight: 600;

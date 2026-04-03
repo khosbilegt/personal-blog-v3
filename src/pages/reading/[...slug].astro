@@ -41,31 +41,32 @@ const description = "Review of the reading material: " + reading.data.title;
           <p>By Koso Bilegsaikhan</p>
           <p>•</p>
           <p>
-            Published {
+            Read {
               reading.data.pubDate.toLocaleDateString("en-US", {
                 month: "short",
                 year: "numeric",
               })
-            }
+            } (meaning the date I finished reading it)
           </p>
         </div>
 
-        <div class="mt-4 overflow-hidden rounded-lg w-full">
+        <div class="mt-8 flow-root">
           {
             reading.data.heroImage && (
-              <Image
-                width={1000}
-                height={500}
-                src={reading.data.heroImage}
-                alt={reading.data.title}
-                class="object-contain"
-              />
+              <div class="mb-4 w-full max-w-[500px] overflow-hidden rounded-lg md:float-left md:mb-4 md:mr-6 md:w-[500px]">
+                <Image
+                  width={1000}
+                  height={500}
+                  src={reading.data.heroImage}
+                  alt={reading.data.title}
+                  class="object-contain"
+                />
+              </div>
             )
           }
-        </div>
-        <div class="mt-16"></div>
-        <div class="md-content">
-          <Content />
+          <div class="md-content mt-4 md:mt-0">
+            <Content />
+          </div>
         </div>
       </article>
       <div class="mt-16"></div>
