@@ -3,7 +3,7 @@ import { type CollectionEntry, getCollection, render } from "astro:content";
 import BaseHead from "../../components/BaseHead.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import { SITE_TITLE } from "../../consts";
 import { Image } from "astro:assets";
 
 export async function getStaticPaths() {
@@ -23,8 +23,8 @@ const { Content } = await render(project);
 <html lang="en">
   <head>
     <BaseHead
-      title={SITE_TITLE}
-      description={SITE_DESCRIPTION}
+      title={project.data.title + " | " + SITE_TITLE}
+      description={project.data.description}
       image={project.data.heroImage}
     />
   </head>

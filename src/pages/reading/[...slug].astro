@@ -17,14 +17,15 @@ type Props = CollectionEntry<"reading">;
 
 const reading = Astro.props;
 const { Content } = await render(reading);
+const description = "Review of the reading material: " + reading.data.title;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <BaseHead
-      title={SITE_TITLE}
-      description={SITE_DESCRIPTION}
+      title={reading.data.title + " | " + SITE_TITLE}
+      description={description}
       image={reading.data.heroImage}
     />
   </head>

@@ -16,6 +16,8 @@ type Props = CollectionEntry<"writing">;
 
 const writing = Astro.props;
 const { Content } = await render(writing);
+// Cut the first 100 characters of the content which is markdown
+const description = writing?.body?.slice(0, 255) + "...";
 ---
 
 <!doctype html>
