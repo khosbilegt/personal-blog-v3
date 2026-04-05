@@ -7,15 +7,25 @@ import Footer from "../components/Footer.astro";
 import { Image } from "astro:assets";
 import profileImage from "../assets/profile.png";
 
-const projects = (await getCollection("projects"))
+const allProjects = await getCollection("projects");
+const allWriting = await getCollection("writing");
+const allReading = await getCollection("reading");
+
+const projects = allProjects
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  // Transform string to Date object
+  .filter((project) => project.data.isFeatured)
   .slice(0, 3);
 
-const writing = (await getCollection("writing"))
+const totalProjects = allProjects.length;
+const totalWriting = allWriting.length;
+const totalReading = allReading.length;
+
+const writing = allWriting
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 12);
 
-const reading = (await getCollection("reading"))
+const reading = allReading
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
 
@@ -82,13 +92,13 @@ const achievements = [
             />
           </div>
         </div>
-        <h3 class="text-lg">PROJECTS</h3>
+        <h3 class="text-lg">FEATURED PROJECTS</h3>
         <div class="flex justify-between items-end">
           <h1 class="text-4xl font-bold">Case Studies</h1>
           <a
             href="/projects"
             class="text-sm text-gray-500 hover:underline align-bottom"
-            >View All</a
+            >View All ({totalProjects})</a
           >
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
@@ -138,7 +148,7 @@ const achievements = [
           <a
             href="/writing"
             class="text-sm text-gray-500 hover:underline align-bottom"
-            >View All</a
+            >View All ({totalWriting})</a
           >
         </div>
         <div class="flex flex-col gap-4 mt-8">
@@ -163,7 +173,7 @@ const achievements = [
           <a
             href="/reading"
             class="text-sm text-gray-500 hover:underline align-bottom"
-            >View All</a
+            >View All ({totalReading})</a
           >
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">

@@ -23,10 +23,10 @@ const projects = defineCollection({
       title: z.string(),
       type: z.optional(z.string()),
       description: z.string(),
-      // Transform string to Date object
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
       heroImage: z.optional(image()),
+      isFeatured: z.optional(z.boolean()),
     }),
 });
 

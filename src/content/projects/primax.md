@@ -4,6 +4,7 @@ type: "FREELANCE"
 heroImage: "https://primaxai.io/primax_logo.svg"
 pubDate: "Jul 20 2025"
 description: "I built the landing page for PrimaxLaunch, an Australia-based data analytics company in the real estate space in collaboration with Extrablack (Design Agency)."
+isFeatured: true
 ---
 
 ## Case Study

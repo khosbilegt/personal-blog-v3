@@ -1,9 +1,9 @@
 ---
-title: "Kinect for UE4"
+title: "Kinect for UE4 - Space Shooter"
 type: "UNIVERSITY"
 heroImage: "https://cdn.freebiesupply.com/logos/large/2x/xbox-9-logo-png-transparent.png"
 pubDate: "Jun 22 2023"
-description: "Python script to run a triage on new emails and mark them read if unimportant. Started as Openclaw experimentation with local models but failed."
+description: "Built a Microsoft Kinect plugin for Unreal Engine 4 and motion-controlled game using it."
 ---
 
 ## Background

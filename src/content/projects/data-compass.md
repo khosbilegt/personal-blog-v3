@@ -4,6 +4,7 @@ type: "HACKATHON"
 heroImage: "https://camo.githubusercontent.com/2c29dee02228eabbe08ca5b27cdcd2a2d6df597945fd2821a347c99d70c1137a/68747470733a2f2f692e696d6775722e636f6d2f64536d77324e732e706e67"
 pubDate: "Aug 31 2025"
 description: "Government data is powerful, but often scattered and difficult to use. DataCompass is an AI powered search engine that helps anyone discover, connect, and understand datasets from the ABS, data.gov.au, and other agencies."
+isFeatured: true
 ---
 
 ## Context
