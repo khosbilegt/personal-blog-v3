@@ -37,4 +37,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.RUSTFS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.RUSTFS_SECRET_KEY }}
         run: |
-          aws --endpoint-url ${{ secrets.RUSTFS_ENDPOINT }} s3 sync dist/ s3://${{ secrets.RUSTFS_BUCKET }}/$(date +%Y-%m-%d-%H%M%S)/
+          aws --endpoint-url ${{ secrets.RUSTFS_ENDPOINT }} s3 sync dist/ s3://${{ secrets.RUSTFS_BUCKET }}/
