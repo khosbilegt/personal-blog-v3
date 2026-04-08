@@ -1,4 +1,4 @@
-name: Build & Deploy Astro
+name: Build & Deploy to VM
 
 on:
   push:
