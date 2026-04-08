@@ -8,6 +8,7 @@ on:
 jobs:
   build-and-upload:
     runs-on: ubuntu-latest
+    environment: PERSONAL
 
     steps:
       - name: Checkout code
