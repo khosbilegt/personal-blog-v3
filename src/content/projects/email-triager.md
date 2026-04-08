@@ -10,7 +10,7 @@ description: "Python script to run a triage on new emails and mark them read if 
 
 My entire feed was completely dominated by OpenClaw for the last couple months and I decided to give it a try. Because at the moment, I'm very much a broke university student with a gaming PC, I decided to try my hand at running it with a local model via Ollama. Unfortunately, fate had other plans for me.
 
-![OpenClaw local-model attempt failing](../../assets/email-triager/openclaw_fail.png)
+![OpenClaw local-model attempt failing](../../assets/blog/openclaw_fail.png)
 
 Seeing that I hadn't made my monthly LinkedIn post to keep up my visibility, I decided to just turn it into a simple Python script and keep the streak going.
 
