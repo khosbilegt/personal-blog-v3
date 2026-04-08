@@ -1,0 +1,37 @@
+name: Build & Deploy Astro
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build
+
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+      - name: Upload dist/ to RustFS
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.RUSTFS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.RUSTFS_SECRET_KEY }}
+        run: |
+          aws --endpoint-url ${{ secrets.RUSTFS_ENDPOINT }} s3 sync dist/ s3://${{ secrets.RUSTFS_BUCKET }}/$(date +%Y-%m-%d-%H%M%S)/
