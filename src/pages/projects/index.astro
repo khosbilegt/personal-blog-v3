@@ -36,7 +36,7 @@ const projects = (await getCollection("projects")).sort(
                 {project.data.heroImage && (
                   <Image
                     width={1000}
-                    height={250}
+                    height={1000}
                     src={project.data.heroImage}
                     alt={project.data.title}
                     class="object-cover"

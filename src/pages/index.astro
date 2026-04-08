@@ -114,9 +114,9 @@ const achievements = [
                 <div class="h-[250px] w-full bg-gray-800 flex justify-center items-center overflow-hidden">
                   {project.data.heroImage && (
                     <Image
-                      class="object-contain"
+                      class=""
                       width={1000}
-                      height={250}
+                      height={1000}
                       src={project.data.heroImage}
                       alt={project.data.title}
                     />
@@ -186,14 +186,10 @@ const achievements = [
                 ]}
                 onclick={`window.location.href = '/reading/${reading.id}'`}
               >
-                <div
-                  class="h-[500px] w-full bg-gray-800 flex justify-center items-center overflow-hidden object-contain
-
-"
-                >
+                <div class="h-[500px] w-full bg-gray-800 flex justify-center items-center overflow-hidden">
                   {reading.data.heroImage && (
                     <Image
-                      class="object-contain"
+                      class="w-full h-full object-cover"
                       src={reading.data.heroImage}
                       alt={reading.data.title}
                       width={1000}

@@ -1,9 +1,10 @@
 ---
 title: "Plutio - DevOps & AI Consultation"
 type: "FREELANCE"
-heroImage: "https://www.plutio.com/static/images/brand/logo/plutio-icon.png"
+heroImage: "https://appsumo2-cdn.appsumo.com/media/deals/images/as-web-Plutio_ZquJ1EN.jpg?width=832&height=468&aspect_ratio=16:9&optimizer=gif"
 pubDate: "Dec 12 2025"
 description: "I helped Plutio debug issues on their backend services causing frequent crashes and helped build the upcoming AI feature, Plutio Pal."
+isFeatured: true
 ---
 
 ## Case Study
