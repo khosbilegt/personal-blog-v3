@@ -116,15 +116,40 @@ const workTypes = [
                     </span>
                     <span>Visit on Upwork</span>
                   </a>
-                  <a
-                    href={`mailto:${email}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="bg-gray-900 border border-gray-800 hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-all duration-200 w-full max-w-[250px] justify-center inline-flex items-center gap-2"
-                  >
-                    <span class="inline-flex size-5 shrink-0 items-center justify-center">
+                  <div class="relative w-full max-w-[250px]">
+                    <a
+                      href={`mailto:${email}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="bg-gray-900 border border-gray-800 hover:bg-gray-800 text-white px-4 py-2 pr-12 rounded-md transition-all duration-200 w-full justify-center inline-flex items-center gap-2"
+                    >
+                      <span class="inline-flex size-5 shrink-0 items-center justify-center">
+                        <svg
+                          class="size-5 text-gray-200"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M4 6h16v12H4z" />
+                          <path d="m22 7-10 7L2 7" />
+                        </svg>
+                      </span>
+                      <span>Send email</span>
+                    </a>
+
+                    <button
+                      type="button"
+                      aria-label="Copy email"
+                      class="group absolute right-2 top-1/2 -translate-y-1/2 inline-flex size-8 items-center justify-center rounded-md border border-gray-800 bg-gray-900 hover:bg-gray-800 transition-all duration-200"
+                      data-copy-email-button
+                      data-copy-value={email}
+                    >
                       <svg
-                        class="size-5 text-gray-200"
+                        class="size-4 text-gray-200"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
@@ -133,12 +158,20 @@ const workTypes = [
                         stroke-linejoin="round"
                         aria-hidden="true"
                       >
-                        <path d="M4 6h16v12H4z" />
-                        <path d="m22 7-10 7L2 7" />
+                        <rect x="9" y="9" width="13" height="13" rx="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                       </svg>
-                    </span>
-                    <span>Send email</span>
-                  </a>
+
+                      <span
+                        class="pointer-events-none absolute -top-8 right-0 hidden whitespace-nowrap rounded-md border border-gray-800 bg-gray-950 px-2 py-1 text-xs text-gray-100 shadow-sm"
+                        role="status"
+                        aria-live="polite"
+                        data-copy-tooltip
+                      >
+                        Email has been copied to clipboard
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             ))
@@ -160,6 +193,90 @@ const workTypes = [
               > in Sydney, NSW. If you want to throw a sponsorship my way, I'll come
               running.
             </p>
+            <div
+              class="mt-2 flex lg:flex-row flex-col gap-4 justify-center items-center lg:justify-start"
+            >
+              <a
+                href="https://www.linkedin.com/in/koso-bilegsaikhan/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-all duration-200 w-full max-w-[250px] justify-center inline-flex items-center gap-2"
+              >
+                <span
+                  class="inline-flex size-5 shrink-0 items-center justify-center"
+                >
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/LinkedIn_logo_initials.png/960px-LinkedIn_logo_initials.png"
+                    alt=""
+                    class="size-5"
+                    loading="lazy"
+                    decoding="async"
+                    referrerpolicy="no-referrer"
+                  />
+                </span>
+                <span>Visit on LinkedIn</span>
+              </a>
+              <div class="relative w-full max-w-[250px]">
+                <a
+                  href={`mailto:${email}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="bg-gray-900 border border-gray-800 hover:bg-gray-800 text-white px-4 py-2 pr-12 rounded-md transition-all duration-200 w-full justify-center inline-flex items-center gap-2"
+                >
+                  <span
+                    class="inline-flex size-5 shrink-0 items-center justify-center"
+                  >
+                    <svg
+                      class="size-5 text-gray-200"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M4 6h16v12H4z"></path>
+                      <path d="m22 7-10 7L2 7"></path>
+                    </svg>
+                  </span>
+                  <span>Send email</span>
+                </a>
+
+                <button
+                  type="button"
+                  aria-label="Copy email"
+                  class="group absolute right-2 top-1/2 -translate-y-1/2 inline-flex size-8 items-center justify-center rounded-md border border-gray-800 bg-gray-900 hover:bg-gray-800 transition-all duration-200"
+                  data-copy-email-button
+                  data-copy-value={email}
+                >
+                  <svg
+                    class="size-4 text-gray-200"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                    <path
+                      d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                    ></path>
+                  </svg>
+
+                  <span
+                    class="pointer-events-none absolute -top-8 right-0 hidden whitespace-nowrap rounded-md border border-gray-800 bg-gray-950 px-2 py-1 text-xs text-gray-100 shadow-sm"
+                    role="status"
+                    aria-live="polite"
+                    data-copy-tooltip
+                  >
+                    Email has been copied to clipboard
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -172,5 +289,62 @@ const workTypes = [
     </main>
     <div class="mt-16"></div>
     <Footer />
+
+    <script is:inline>
+      const COPY_TOOLTIP_HIDE_DELAY_MS = 1200;
+
+      async function copyTextToClipboard(text) {
+        if (globalThis?.navigator?.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        textarea.style.top = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+
+      function bindCopyEmailButtons() {
+        document
+          .querySelectorAll("[data-copy-email-button]")
+          .forEach((buttonEl) => {
+            if (buttonEl.dataset.copyBound === "true") return;
+            buttonEl.dataset.copyBound = "true";
+
+            buttonEl.addEventListener("click", async (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+
+              const value = buttonEl.getAttribute("data-copy-value") ?? "";
+              if (!value) return;
+
+              try {
+                await copyTextToClipboard(value);
+
+                const tooltip = buttonEl.querySelector("[data-copy-tooltip]");
+                if (!tooltip) return;
+
+                tooltip.classList.remove("hidden");
+                window.clearTimeout(buttonEl.__copyTooltipTimeoutId);
+                buttonEl.__copyTooltipTimeoutId = window.setTimeout(() => {
+                  tooltip.classList.add("hidden");
+                }, COPY_TOOLTIP_HIDE_DELAY_MS);
+              } catch (err) {
+                console.error("Failed to copy email", err);
+              }
+            });
+          });
+      }
+
+      bindCopyEmailButtons();
+      document.addEventListener("astro:page-load", bindCopyEmailButtons);
+    </script>
   </body>
 </html>

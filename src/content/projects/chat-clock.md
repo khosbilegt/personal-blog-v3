@@ -2,7 +2,7 @@
 title: "ChatClock"
 type: "PERSONAL"
 pubDate: "Jan 5 2026"
-heroImage: "https://lh3.googleusercontent.com/3svgE8DKV2k_teERSNOSei79Rs-j-fe25VKvLceC9F-JFrUXTsJI4W_-Wg2XIYiN2FX04icXY2CrLgWJN306cpRB=s120"
+heroImage: "https://github.com/khosbilegt/chatclock/blob/main/images/logo.png?raw=true"
 description: "Chrome Extension to show a chat partner's time zone for for all the folk chatting with people in other timezones. Currently supports Discord and Instagram's web clients."
 ---
 
