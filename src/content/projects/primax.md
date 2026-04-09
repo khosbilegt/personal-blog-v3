@@ -13,7 +13,7 @@ isFeatured: true
 
 You can read the design specifications and case study built by Extrablack [here](https://extrablack.com.au/project/primax-proptech-taking-the-guess-work-out-of-pricing/).
 
-## Landing Page
+### Landing Page
 
 The Landing Page itself was quite simple, albeit with lots of tiny details that you have to do by hand such as spacing, micro-animations and a sleek design that felt like iOS. If I had been asked to do the designs myself, it would have been quite a challenge but seeing that the designs were already made, my involvement on that part was small. It was a nice change, and the first project where I paid more attention to on the frontend than the back. Most of my other projects ended up being very processing, business-logic heavy so this reminded me that the user journey and experience was important as well. That prompted me to watch as much content related to UI/UX I could find whenever it came onto my feed on Youtube.
 
@@ -21,7 +21,7 @@ To add some flair to the Hero section, I ended up using ThreeJS to create a see-
 
 ![primax_hero](../../assets/blog/primax-hero.png)
 
-## AI Receptionist
+### AI Receptionist
 
 The most fun part of the contract was the AI Receptionist, which can be accessed both through the website and a mobile line using a Twilio number. I used ElevenLabs and its studio to choose a very-heavy Australian-accented voice, which Primax attached to Gerald, their Chief Sales Officer. See him in action [here](https://primaxai.io/urbanity-2025). Strapping it into their operational CMS of choice was a delight and easy to use, and there was barely any lag when I was testing it. Something that would have taken at least a week of fiddling with APIs and LLM providers, strapped with speech-to-text models was turned into an afterthought thanks to Elevenlabs, which is quite impressive.
 
