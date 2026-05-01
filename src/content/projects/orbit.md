@@ -29,4 +29,11 @@ We've got some cool features, including, but not limited to:
 
 But that's about all that I'll disclose at this stage, as we still haven't launched yet. Also, if you see any blogs on our official website, those posts would have either been written by me or went through me (though we haven't added them yet).
 
+## UPDATE
+
+We're officially live starting from May 1! You can find the download links on our website at https://useorbitapp.com/ or use the links below:
+
+- App Store: https://apps.apple.com/us/app/orbit-dating-optimized/id6757459231
+- Play Store: https://play.google.com/store/apps/details?id=uk.co.orbitapp.mobile
+
 ![orbit_thumbnail](../../assets/blog/orbit_thumbnail.png)
