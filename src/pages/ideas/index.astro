@@ -1,0 +1,41 @@
+---
+import BaseHead from "../../components/BaseHead.astro";
+import { getCollection } from "astro:content";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import IdeaAccordion from "../../components/IdeaAccordion.astro";
+
+const ideas = await getCollection("ideas");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body class="flex min-h-screen flex-col">
+    <Header />
+    <main
+      class="w-full mt-32 flex-1 px-12 md:px-16 lg:px-8 md:max-w-6xl md:mx-auto"
+    >
+      <h3 class="text-lg">IDEAS</h3>
+      <h1 class="text-4xl font-bold">∞ Idea Backlog</h1>
+      <p class="mt-4">
+        This is a list of ideas that I have had over the years that I don't have
+        enough time to work on.
+      </p>
+      <div class="flex flex-col mt-8">
+        {
+          ideas.map((idea) => (
+            <IdeaAccordion
+              title={idea.data.title}
+              description={idea.data.description}
+            />
+          ))
+        }
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>

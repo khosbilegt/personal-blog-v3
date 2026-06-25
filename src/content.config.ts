@@ -42,4 +42,13 @@ const reading = defineCollection({
     }),
 });
 
-export const collections = { writing, projects, reading };
+const ideas = defineCollection({
+  loader: glob({ base: "./src/content/ideas", pattern: "**/*.{md,mdx}" }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      description: z.string(),
+    }),
+});
+
+export const collections = { writing, projects, reading, ideas };

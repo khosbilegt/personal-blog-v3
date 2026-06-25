@@ -1,0 +1,41 @@
+---
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<details class="idea-accordion group border-b border-gray-800/70">
+  <summary
+    class="flex cursor-pointer list-none select-none items-center justify-between gap-4 py-2.5 outline-none"
+  >
+    <h3 class="text-base font-medium text-gray-100">{title}</h3>
+
+    <span
+      class="shrink-0 text-lg leading-none text-gray-500 transition-all duration-300 ease-out group-open:rotate-45 group-open:text-gray-300"
+    >
+      +
+    </span>
+  </summary>
+
+  <div
+    class="idea-accordion-panel grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out group-open:grid-rows-[1fr]"
+  >
+    <div class="min-h-0 overflow-hidden">
+      <div
+        class="pb-3 pr-4 text-sm leading-relaxed text-gray-400 opacity-0 transition-opacity duration-300 ease-out group-open:opacity-100"
+      >
+        <p>{description}</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<style>
+  /* Browsers hide <details> content with display:none, which breaks height transitions */
+  .idea-accordion > .idea-accordion-panel {
+    display: grid !important;
+  }
+</style>

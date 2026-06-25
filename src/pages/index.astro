@@ -4,12 +4,14 @@ import Header from "../components/Header.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 import { getCollection } from "astro:content";
 import Footer from "../components/Footer.astro";
+import IdeaAccordion from "../components/IdeaAccordion.astro";
 import { Image } from "astro:assets";
 import profileImage from "../assets/profile.png";
 
 const allProjects = await getCollection("projects");
 const allWriting = await getCollection("writing");
 const allReading = await getCollection("reading");
+const allIdeas = await getCollection("ideas");
 
 const projects = allProjects
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
@@ -20,6 +22,7 @@ const projects = allProjects
 const totalProjects = allProjects.length;
 const totalWriting = allWriting.length;
 const totalReading = allReading.length;
+const totalIdeas = allIdeas.length;
 
 const writing = allWriting
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
@@ -28,6 +31,8 @@ const writing = allWriting
 const reading = allReading
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
+
+const ideas = allIdeas.slice(0, 10);
 
 const workStartDate = new Date("2020-03-01");
 const workExperience = new Date().getFullYear() - workStartDate.getFullYear();
@@ -163,6 +168,26 @@ const achievements = [
                   • {writing.data.title}
                 </h1>
               </a>
+            ))
+          }
+        </div>
+        <div class="mt-16"></div>
+        <h3 class="text-lg">IDEAS</h3>
+        <div class="flex justify-between items-end">
+          <h1 class="text-4xl font-bold">∞ Idea Backlog</h1>
+          <a
+            href="/ideas"
+            class="text-sm text-gray-500 hover:underline align-bottom"
+            >View All ({totalIdeas})</a
+          >
+        </div>
+        <div class="flex flex-col mt-8">
+          {
+            ideas.map((idea) => (
+              <IdeaAccordion
+                title={idea.data.title}
+                description={idea.data.description}
+              />
             ))
           }
         </div>

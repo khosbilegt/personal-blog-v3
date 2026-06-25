@@ -5,7 +5,8 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 export async function GET(context) {
   const posts = await getCollection("writing");
   const projects = await getCollection("projects");
-  const items = [...posts, ...projects];
+  const ideas = await getCollection("ideas");
+  const items = [...posts, ...projects, ...ideas];
   return rss({
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
